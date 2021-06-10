@@ -22,6 +22,8 @@ public class KafkaProducerExample {
 
     private static Instant start = null;
 
+    private static long iteration =0;
+
     public static void main(String[] args) throws InterruptedException, IOException, URISyntaxException {
         Workload wrld = new Workload();
 
@@ -37,11 +39,12 @@ public class KafkaProducerExample {
 
          // over all the workload
         for (int i = 0; i < wrld.getDatax().size(); i++) {
+            log.info("sending a batch of authorizations of size:{}", Math.ceil(wrld.getDatay().get(i)));
 
             //   loop over each sample
             for (long j = 0; j < Math.ceil(wrld.getDatay().get(i)); j++) {
 
-                log.info("Sending messages \"" + config.getMessage() + " - {}\"{}", i);
+               /* log.info("Sending messages \"" + config.getMessage() + " - {}\"{}", i);*/
                 Future<RecordMetadata> recordMetadataFuture = producer.send(new ProducerRecord(config.getTopic(),
                         null, null,
                         UUID.randomUUID().toString(), "\"" + config.getMessage() + " - " + i));
@@ -60,15 +63,18 @@ public class KafkaProducerExample {
 
 
             }
-
+            log.info("iteration{}", iteration);
 
             log.info("{} messages sent ...", Math.ceil(wrld.getDatay().get(i)));
 
-            log.info("sleeping for 15 seconds");
+            iteration++;
+
+
+            log.info("sleeping for {} seconds", delay);
 
 
 
-            Thread.sleep(15000);
+            Thread.sleep(delay);
 
 
 

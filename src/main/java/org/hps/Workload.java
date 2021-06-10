@@ -11,7 +11,6 @@ import java.util.List;
 public class Workload {
     // private static final Logger log = LogManager.getLogger(KafkaProducerConfig.class);
 
-
     private static String line = "";
     private static String cvsSplitBy = ",";
 
@@ -49,7 +48,7 @@ public class Workload {
 
     private void loadWorkload() throws IOException, URISyntaxException {
         ClassLoader CLDR = this.getClass().getClassLoader();
-        InputStream inputStream = CLDR.getResourceAsStream("default1ArrivalRates.csv");
+        InputStream inputStream = CLDR.getResourceAsStream("defaultArrivalRatesm.csv");
 
 
         List<String> out = new ArrayList<>();
