@@ -19,10 +19,9 @@ public class KafkaProducerConfig {
     private final String message;
     private final String acks;
     private final String headers;
-
     private final String additionalConfig;
-
-    public KafkaProducerConfig(String bootstrapServers, String topic, int delay, Long messageCount, String message,
+    public KafkaProducerConfig(String bootstrapServers, String topic,
+                               int delay, Long messageCount, String message,
                                String acks, String additionalConfig, String headers) {
         this.bootstrapServers = bootstrapServers;
         this.topic = topic;
@@ -33,18 +32,17 @@ public class KafkaProducerConfig {
         this.headers = headers;
         this.additionalConfig = additionalConfig;
     }
-
     public static KafkaProducerConfig fromEnv() {
         String bootstrapServers = System.getenv("BOOTSTRAP_SERVERS");
         String topic = System.getenv("TOPIC");
         int delay = Integer.valueOf(System.getenv("DELAY_MS"));
-        Long messageCount = System.getenv("MESSAGE_COUNT") == null ? DEFAULT_MESSAGES_COUNT : Long.valueOf(System.getenv("MESSAGE_COUNT"));
-        String message = System.getenv("MESSAGE") == null ? DEFAULT_MESSAGE : System.getenv("MESSAGE");
-
+        Long messageCount = System.getenv("MESSAGE_COUNT") == null ?
+                DEFAULT_MESSAGES_COUNT : Long.valueOf(System.getenv("MESSAGE_COUNT"));
+        String message = System.getenv("MESSAGE") == null ? DEFAULT_MESSAGE :
+                System.getenv("MESSAGE");
         String acks = System.getenv().getOrDefault("PRODUCER_ACKS", "1");
         String headers = System.getenv("HEADERS");
         String additionalConfig = System.getenv().getOrDefault("ADDITIONAL_CONFIG", "");
-
         return new KafkaProducerConfig(bootstrapServers, topic, delay, messageCount, message,
                 acks, additionalConfig, headers);
     }
@@ -56,13 +54,14 @@ public class KafkaProducerConfig {
         Properties props = new Properties();
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, config.getBootstrapServers());
         props.put(ProducerConfig.ACKS_CONFIG, config.getAcks());
-        props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringSerializer");
-        props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringSerializer");
+        props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG,
+                "org.apache.kafka.common.serialization.StringSerializer");
+        props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG,
+                "org.apache.kafka.common.serialization.StringSerializer");
         //props.put(ProducerConfig., "org.apache.kafka.common.serialization.StringSerializer");
-
-
         if (!config.getAdditionalConfig().isEmpty()) {
-            StringTokenizer tok = new StringTokenizer(config.getAdditionalConfig(), ", \t\n\r");
+            StringTokenizer tok =
+                    new StringTokenizer(config.getAdditionalConfig(), ", \t\n\r");
             while (tok.hasMoreTokens()) {
                 String record = tok.nextToken();
                 int endIndex = record.indexOf('=');
@@ -76,7 +75,6 @@ public class KafkaProducerConfig {
         }
         return props;
     }
-
 
     public String getBootstrapServers() {
         return bootstrapServers;
