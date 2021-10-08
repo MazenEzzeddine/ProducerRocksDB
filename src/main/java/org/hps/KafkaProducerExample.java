@@ -29,37 +29,39 @@ public class KafkaProducerExample {
         boolean blockProducer = System.getenv("BLOCKING_PRODUCER") != null;
         AtomicLong numSent = new AtomicLong(0);
          // over all the workload
-        for (int i = 0; i < wrld.getDatax().size(); i++) {
-            log.info("sending a batch of authorizations of size:{}",
-                    Math.ceil(wrld.getDatay().get(i)));
+        //for (int i = 0; i < wrld.getDatax().size(); i++) {
+        long key = 0L;
+        while(true){
+           // log.info("sending a batch of authorizations of size:{}",
+                    //Math.ceil(wrld.getDatay().get(i)));
             //   loop over each sample
-            for (long j = 0; j < Math.ceil(wrld.getDatay().get(i)); j++) {
+            //for (long j = 0; j < Math.ceil(wrld.getDatay().get(i)); j++) {
                /* log.info("Sending messages \"" + config.getMessage() + " - {}\"{}", i);*/
                 Future<RecordMetadata> recordMetadataFuture =
                         producer.send(new ProducerRecord(config.getTopic(),
-                        null, null,
-                        UUID.randomUUID().toString() /*null*/, "\"" + config.getMessage() + " - " + i));
+                        null, null,  /*UUID.randomUUID().toString()*/ Long.toString(key)/*null*/,  "Hello HPS"  /*config.getMessage() + " - " + i*/));
+                key++;
                 if(blockProducer) {
                     try {
                         recordMetadataFuture.get();
                         // Increment number of sent messages only if ack is received by producer
                         numSent.incrementAndGet();
                     } catch (ExecutionException e) {
-                        log.warn("Message {} wasn't sent properly!", i, e.getCause());
+                        log.warn("Message {} wasn't sent properly!", e.getCause());
                     }
                 } else {
                     // Increment number of sent messages for non blocking producer
                     numSent.incrementAndGet();
                 }
-            }
+            //}
             log.info("iteration{}", iteration);
-            log.info("{} messages sent ...", Math.ceil(wrld.getDatay().get(i)));
+            //log.info("{} messages sent ...", Math.ceil(wrld.getDatay().get(i)));
             iteration++;
             log.info("sleeping for {} seconds", delay);
             Thread.sleep(delay);
         }
        // producer.metrics().forEach();
-        producer.close();
-        log.info("all {} messages sent ...", Math.ceil(wrld.getDatay().size()));
+/*        producer.close();
+        log.info("all {} messages sent ...", Math.ceil(wrld.getDatay().size()));*/
     }
 }
