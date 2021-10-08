@@ -39,7 +39,7 @@ public class KafkaProducerExample {
                /* log.info("Sending messages \"" + config.getMessage() + " - {}\"{}", i);*/
                 Future<RecordMetadata> recordMetadataFuture =
                         producer.send(new ProducerRecord(config.getTopic(),
-                        null, null,  /*UUID.randomUUID().toString()*/ Long.toString(key)/*null*/,  "Hello HPS"  /*config.getMessage() + " - " + i*/));
+                        null, null,  /*UUID.randomUUID().toString()*/ Long.toString(key)/*null*/,  "Hello HPS: "  + key /*config.getMessage() + " - " + i*/));
                 key++;
                 if(blockProducer) {
                     try {
